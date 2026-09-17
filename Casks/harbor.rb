@@ -1,11 +1,11 @@
 cask "harbor" do
-  version "1.2.3"
-  sha256 "6fb602e832fb1cd50765083d74d164b353f043ae11461482c97f4bccc16c0cb6"
+  version "1.7.7"
+  sha256 "ccd52a14d48a6280cdcb4df0fc01973f80861b289434e01899e1f7a05e8811ab"
 
-  url "https://github.com/tahseen-kakar/harbor/releases/download/v#{version}/Harbor-#{version}.dmg"
+  url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}.dmg"
   name "Harbor"
   desc "Download manager for URLs, magnet links, and torrent files"
-  homepage "https://github.com/tahseen-kakar/harbor"
+  homepage "https://github.com/thsnkhn/harbor"
 
   livecheck do
     url :url

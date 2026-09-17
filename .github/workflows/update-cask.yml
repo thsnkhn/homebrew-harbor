@@ -1,0 +1,58 @@
+name: Update Harbor cask
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-harbor-cask
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update cask from latest Harbor release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_json="$(gh api repos/thsnkhn/harbor/releases/latest)"
+          tag="$(jq -r '.tag_name' <<<"$release_json")"
+          version="${tag#v}"
+          asset_name="Harbor-${version}.dmg"
+          asset_url="$(jq -r --arg asset_name "$asset_name" '.assets[] | select(.name == $asset_name) | .browser_download_url' <<<"$release_json")"
+
+          [[ "$tag" =~ ^v[0-9]+(\.[0-9]+){2}$ ]]
+          [[ -n "$asset_url" && "$asset_url" != "null" ]]
+
+          dmg_path="$RUNNER_TEMP/$asset_name"
+          curl --fail --location --retry 3 --silent --show-error --output "$dmg_path" "$asset_url"
+          sha256="$(sha256sum "$dmg_path" | awk '{print $1}')"
+
+          sed -i -E \
+            -e "s/^  version \".*\"$/  version \"$version\"/" \
+            -e "s/^  sha256 \".*\"$/  sha256 \"$sha256\"/" \
+            -e 's|^  url "https://github.com/[^/]+/harbor/releases/download/v#\{version\}/Harbor-#\{version\}\.dmg"$|  url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}.dmg"|' \
+            -e 's|^  homepage "https://github.com/[^/]+/harbor"$|  homepage "https://github.com/thsnkhn/harbor"|' \
+            Casks/harbor.rb
+
+          git diff --check
+          if git diff --quiet; then
+            echo "Cask is already current at $version."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/harbor.rb
+          git commit -m "chore: update Harbor cask to $version"
+          git push
