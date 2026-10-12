@@ -1,6 +1,6 @@
 cask "harbor" do
-  version "1.8.2"
-  sha256 "a5ace20681b796539d228337f175a2b7a6fd0aa09582d0387817b33739553c41"
+  version "1.8.3"
+  sha256 "ce227cfa1c7460ca652c0fe2ef236c7adb89934a8ac2816694fa42a78c05efb9"
 
   url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}.dmg"
   name "Harbor"
