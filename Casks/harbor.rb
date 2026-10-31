@@ -1,8 +1,15 @@
 cask "harbor" do
-  version "1.8.6"
-  sha256 "174beb130dd2b457eba1f14024272b02ac86167b12b6cf54145937cdc5285f0d"
+  arch arm: "Apple-Silicon", intel: "Intel"
+  version "1.9.0"
 
-  url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}.dmg"
+  on_arm do
+    sha256 "f79448df9a2ed618cdac752fc482b134f0aa6f7960d25f0744bdf06a9be69950"
+  end
+  on_intel do
+    sha256 "412792360d149a71a63b03b14dd66347712bad0d61f8068f8ff41c7618dfd164"
+  end
+
+  url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}-#{arch}.dmg"
   name "Harbor"
   desc "Download manager for URLs, magnet links, and torrent files"
   homepage "https://github.com/thsnkhn/harbor"
