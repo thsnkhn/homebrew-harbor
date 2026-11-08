@@ -1,12 +1,12 @@
 cask "harbor" do
   arch arm: "Apple-Silicon", intel: "Intel"
-  version "1.9.0"
+  version "1.9.1"
 
   on_arm do
-    sha256 "f79448df9a2ed618cdac752fc482b134f0aa6f7960d25f0744bdf06a9be69950"
+    sha256 "04f6216f539c800279e887b2fa1ce48c40be319dbb7be06243295f4a7095b730"
   end
   on_intel do
-    sha256 "412792360d149a71a63b03b14dd66347712bad0d61f8068f8ff41c7618dfd164"
+    sha256 "f38003ae1ef6d4a2f2125852eedc2ab42c26bbd4b8d8915d8d1bf074ed2c13a3"
   end
 
   url "https://github.com/thsnkhn/harbor/releases/download/v#{version}/Harbor-#{version}-#{arch}.dmg"
